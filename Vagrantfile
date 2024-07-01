@@ -12,21 +12,21 @@ Vagrant.configure("2") do |config|
     #   sudo apt install gns3-gui gns3-server -y
     #   # Configure GNS3 server to start on boot (optional)
     #   systemctl enable gns3
-
+        
         echo "Creating Xauthority file"
         touch /home/vagrant/.Xauthority
         chown vagrant:vagrant /home/vagrant/.Xauthority
-        echo "Installing GNS3"
-        sudo apt-get update
-        sudo apt-get install -y software-properties-common
-        # sudo add-apt-repository ppa:gns3/ppa -y
-        sudo apt-get update
-        # sudo apt-get install -y gns3-gui gns3-server xauth xorg openbox
-        sudo apt install -y python3 python3-pip python3-pyqt5 python3-pyqt5.qtwebsockets python3-pyqt5.qtsvg qemu-kvm qemu-utils libvirt-clients libvirt-daemon-system virtinst dynamips software-properties-common ca-certificates curl gnupg2
-        sudo pip3 install gns3-gui
-        sudo pip3 install gns3-server
-        echo "Installing curl"
-        sudo apt-get install -y curl
+        # echo "Installing GNS3"
+        # sudo apt-get update
+        # sudo apt-get install -y software-properties-common
+        # # sudo add-apt-repository ppa:gns3/ppa -y
+        # sudo apt-get update
+        # # sudo apt-get install -y gns3-gui gns3-server xauth xorg openbox
+        # sudo apt install -y python3 python3-pip python3-pyqt5 python3-pyqt5.qtwebsockets python3-pyqt5.qtsvg qemu-kvm qemu-utils libvirt-clients libvirt-daemon-system virtinst dynamips software-properties-common ca-certificates curl gnupg2
+        # sudo pip3 install gns3-gui
+        # sudo pip3 install gns3-server
+        # echo "Installing curl"
+        # sudo apt-get install -y curl
         echo "Installing Docker"
         sudo apt-get install apt-transport-https ca-certificates curl \ software-properties-common
         curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -35,6 +35,14 @@ Vagrant.configure("2") do |config|
                 $(lsb_release -cs) stable"
         sudo apt update
         sudo apt install -y docker-ce
+
+
+        echo "Installing Docker Compose"
+        sudo apt install docker-compose
+        
+        echo "ADDING $USER to docker group"
+        sudo usermod -aG sudo vagrant
+        sudo usermod -aG docker vagrant
 
     SHELL
   
