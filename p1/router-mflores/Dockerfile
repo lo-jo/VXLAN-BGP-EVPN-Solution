@@ -5,7 +5,8 @@ RUN apk add --no-cache busybox
 RUN $pwd
 RUN apk update
 RUN apk add nano
-# WORKDIR /etc/frr/
+WORKDIR /etc/frr/
+COPY daemons /etc/frr/daemons
 
 # RUN echo 
 
