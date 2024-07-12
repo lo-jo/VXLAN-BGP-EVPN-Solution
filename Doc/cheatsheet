@@ -1,0 +1,39 @@
+## What is an autonomous system ?
+
+The internet is a network made up of multiple smaller networks called autonomous systems.
+
+These networks are essentially a large pool of router run by a single organization.  Every computer or device connected to the internet is linked to an AS. 
+
+Each AS have a coherent routing policy which means that they dispacth specific ip ranges that they control and define which other AS they interact with.
+
+Autonomous systems pass this information on internet using the BGP protocol (Border Gateway Protocol).
+
+## What is the BGP Protocol
+Border Gateway Protocol (BGP) is the routing protocol for the Internet. Much like the post office processing mail, BGP picks the most efficient routes for delivering Internet traffic amongst autonomous systems.
+
+## What is VLAN
+A Virtual local area network groups devices regardless of their physical emplacement.
+
+They are used to create independent networks inside a physical network. 
+
+A physical network is like a tower building where VLAN are floors and communication rules (switches) are elevators or doors that let or forbid the apartments communicate with each other.
+
+
+## What is VXLAN
+VLAN have their limits especially in big data centers and cloud environments.
+
+##### VLANs have a limited number
+VLANs work under OSI model layer 2 unfortunately the IEEE 802.1Q norm restricts the number of possible VLAN to 4096 because of the 12 bits marking of VLANs.
+
+VxLAN, on the other hand, have a VNI coded under 24 bits which equals up to 16 millions of VXLANs inside the same domain.
+
+![alt text](image.png)
+
+
+
+
+#### What is Static and Dynamic multicast ?
+
+
+## What is OSPFD
+## What is IS IS 
