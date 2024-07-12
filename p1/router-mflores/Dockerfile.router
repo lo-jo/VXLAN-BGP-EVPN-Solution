@@ -1,0 +1,7 @@
+FROM frrouting/frr
+RUN apk add --no-cache busybox
+
+WORKDIR /etc/frr/
+COPY /router-mflores/daemons /etc/frr/daemons
+
+
