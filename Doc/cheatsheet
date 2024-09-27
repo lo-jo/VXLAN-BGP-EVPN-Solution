@@ -2,7 +2,7 @@
 
 The internet is a network made up of multiple smaller networks called autonomous systems.
 
-These networks are essentially a large pool of router run by a single organization.  Every computer or device connected to the internet is linked to an AS. 
+These networks are essentially a large pool of routers run by a single organization.  Every computer or device connected to the internet is linked to an AS. 
 
 Each AS have a coherent routing policy which means that they dispacth specific ip ranges that they control and define which other AS they interact with.
 

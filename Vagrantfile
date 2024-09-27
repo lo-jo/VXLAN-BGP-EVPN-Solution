@@ -1,5 +1,5 @@
 Vagrant.configure("2") do |config|
-    config.vm.box = "ubuntu/bionic64"
+    config.vm.box = "ubuntu/jammy64"
   
     # Enable X11 forwarding
     config.ssh.forward_x11 = true
@@ -12,12 +12,16 @@ Vagrant.configure("2") do |config|
 
         echo "\e[33m --- Installing Docker --- \e[0m"
         sudo apt-get install -y apt-transport-https ca-certificates curl \ software-properties-common
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-        sudo add-apt-repository \
-            "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-                $(lsb_release -cs) stable"
-        sudo apt update -y
-        sudo apt install -y docker-ce
+        # curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        # sudo add-apt-repository \
+        #     "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+        #         $(lsb_release -cs) stable"
+        # sudo apt update -y
+        # sudo apt install -y docker-ce
+        # 1. download the script
+        #
+        curl -fsSL https://get.docker.com -o install-docker.sh
+        sudo sh install-docker.sh
 
 
         echo "\e[33m --- Installing Docker Compose --- \e[0m"
@@ -26,6 +30,9 @@ Vagrant.configure("2") do |config|
         echo "\e[33m --- ADDING $USER to docker group --- \e[0m"
         sudo usermod -aG sudo vagrant
         sudo usermod -aG docker vagrant
+
+
+        # ./install_gns3.sh
 
     SHELL
   
