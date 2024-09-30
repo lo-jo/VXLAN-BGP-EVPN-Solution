@@ -24,7 +24,7 @@ echo "ubridge ubridge/install-setuid boolean true" | sudo debconf-set-selections
 
 # Configuring wireshark-common for GNS3              
 # Automatically reject the "Should non-superusers be able to capture packets?" prompt
-echo "wireshark-common wireshark-common/install-setuid boolean false" | sudo debconf-set-selections
+echo "wireshark-common wireshark-common/install-setuid boolean true" | sudo debconf-set-selections
 
 echo -e "${YELLOW}... Adding GNS3 PPA repository ...${RESET}"
 sudo add-apt-repository -y ppa:gns3/ppa
