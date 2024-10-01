@@ -2,7 +2,7 @@
 # !!! RUN COMMAND INSIDE DOCKER CONTAINER
 
 # Assign ip address on the eth0 interface
-ip address add 2.1.1.1/24 dev eth0
+ip address add 10.1.1.1/24 dev eth0
 
 # Add new network link with the name vxlan10 of type vxlan
 # with an id of 10
@@ -10,7 +10,7 @@ ip address add 2.1.1.1/24 dev eth0
 # local ip is the source for packets
 # remote ip is the destination
 # port is the default port for vxlan
-ip link add name vxlan10 type vxlan id 10 dev eth0 local 2.1.1.1 remote 2.1.1.2 dstport 4789
+ip link add name vxlan10 type vxlan id 10 dev eth0 local 10.1.1.1 remote 10.1.1.2 dstport 4789
 ip link set dev vxlan10 up
 
 # Add bridge

@@ -1,4 +1,5 @@
 #!/bin/sh
+echo "Let's get QUIZZICAL"
 echo "That would be cool if we could automate this"
 echo "GOING INSIDE CONTAINER HOST 1"
 echo "configuring host1 with ./host1"
