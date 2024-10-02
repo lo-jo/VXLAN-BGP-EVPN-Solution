@@ -4,5 +4,3 @@ RUN apk add --no-cache busybox
 RUN mkdir /etc/init_scripts
 COPY --from=vagrant p2/mflores-hosts/* /etc/init_scripts 
 RUN chmod +x /etc/init_scripts/*
-
-CMD [ "/etc/init_scripts/$START_SCRIPT; /bin/sh"]

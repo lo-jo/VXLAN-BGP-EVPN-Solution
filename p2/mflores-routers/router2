@@ -1,4 +1,4 @@
-#!/bin/sh 
+#!/bin/sh
 
 ip address add 2.1.1.2/24 dev eth0
 
@@ -7,10 +7,13 @@ ip link set dev vxlan10 up
 
 ip link add br0 type bridge
 ip link set dev br0 up
-ip link show br0 
+ip link show br0
 
 brctl addif br0 eth1
 brctl addif br0 vxlan10
 
 ip link show eth1
 ip link show vxlan10
+
+exec /bin/sh
+#/usr/lib/frr/docker-start
