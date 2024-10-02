@@ -4,7 +4,7 @@ Vagrant.configure("2") do |config|
     # Enable X11 forwarding
     config.ssh.forward_x11 = true
   
-    config.vm.provision "shell", inline: <<-SHELL
+    config.vm.provision "shell", keep_color: true, inline: <<-SHELL
         
         echo "\e[33m --- Creating Xauthority file --- \e[0m"
         touch /home/vagrant/.Xauthority
@@ -32,7 +32,8 @@ Vagrant.configure("2") do |config|
         sudo usermod -aG docker vagrant
 
 
-        # ./install_gns3.sh
+        /vagrant/installgns3.sh
+        #/vagrant/p1/build_devices.sh
 
     SHELL
   
