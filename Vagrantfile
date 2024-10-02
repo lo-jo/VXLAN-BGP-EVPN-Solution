@@ -33,7 +33,7 @@ Vagrant.configure("2") do |config|
 
 
         /vagrant/installgns3.sh
-        /vagrant/p1/build_devices.sh
+        #/vagrant/p1/build_devices.sh
 
     SHELL
   

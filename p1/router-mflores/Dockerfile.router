@@ -2,6 +2,7 @@ FROM frrouting/frr
 RUN apk add --no-cache busybox
 
 WORKDIR /etc/frr/
-COPY --from=router-mflores daemons /etc/frr/daemons
-
-
+COPY --from=vagrant p1/router-mflores/daemons /etc/frr/daemons
+RUN mkdir /etc/init_scripts
+COPY --from=vagrant p2/mflores-routers/* /etc/init_scripts 
+RUN chmod +x /etc/init_scripts/*
