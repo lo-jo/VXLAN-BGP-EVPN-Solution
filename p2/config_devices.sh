@@ -1,4 +1,8 @@
-#!/bin/sh
+#!/bin/bash
+
+active_devices=$(docker ps -q)
+
+echo "Active devices: $active_devices"
 echo "That would be cool if we could automate this"
 echo "GOING INSIDE CONTAINER HOST 1"
 echo "configuring host1 with ./host1"

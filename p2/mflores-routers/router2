@@ -1,14 +1,27 @@
 #!/bin/sh 
 
+# Assigning IP address to network interface eth0
+# (local IP used for VXLAN tunnel)
 ip address add 2.1.1.2/24 dev eth0
 
-ip link add name vxlan10 type vxlan id 10 dev eth0 local 2.1.1.2 remote 2.1.1.1 dstport 4789
+
+# Creating a VXLAN interface vxlan10
+# id 10 > VXLAN Network Identifier (VNI)
+# eth0 > underlay network interface
+# local is the local VTEP ip
+# remote is the remote VTEP ip
+# 4789 is the UDP port number used for VXLAN encapsulation
+ip link add name vxlan10 type vxlan id 10 dev eth0 local 2.1.1.2 group 239.1.1.1 dstport 4789
+
+# ip link add name vxlan10 type vxlan id 10 dev eth0 local 2.1.1.2 remote 2.1.1.1 dstport 4789
 ip link set dev vxlan10 up
 
+# Creating a bridge interface br0 to connect VXLAN interface to physical network interface eth1
 ip link add br0 type bridge
 ip link set dev br0 up
 ip link show br0 
 
+# Adding eth1 (local network) and vxlan10 to bridge interface br0
 brctl addif br0 eth1
 brctl addif br0 vxlan10
 
