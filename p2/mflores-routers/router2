@@ -1,4 +1,4 @@
-#!/bin/sh 
+#!/bin/sh
 
 # Assigning IP address to network interface eth0
 # (local IP used for VXLAN tunnel)
@@ -19,7 +19,7 @@ ip link set dev vxlan10 up
 # Creating a bridge interface br0 to connect VXLAN interface to physical network interface eth1
 ip link add br0 type bridge
 ip link set dev br0 up
-ip link show br0 
+ip link show br0
 
 # Adding eth1 (local network) and vxlan10 to bridge interface br0
 brctl addif br0 eth1
@@ -27,3 +27,6 @@ brctl addif br0 vxlan10
 
 ip link show eth1
 ip link show vxlan10
+
+exec /bin/sh
+#/usr/lib/frr/docker-start

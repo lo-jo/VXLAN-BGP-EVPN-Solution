@@ -1,2 +1,4 @@
-#!/bin/sh 
+#!/bin/sh
 ip address add 1.1.1.2/24 dev eth1
+
+/bin/sh
