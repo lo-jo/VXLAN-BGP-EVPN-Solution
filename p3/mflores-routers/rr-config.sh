@@ -1,28 +1,33 @@
 #!/bin/bash
 
-sleep 2
-
 vtysh <<-EOF
 configure terminal
+hostname mflores-1
 
-# BGP Configuration
-router bgp 65000
-  bgp router-id 1.1.1.1           # RR's router ID
-  neighbor 192.168.0.2 remote-as 65000
-  neighbor 192.168.0.3 remote-as 65000
-  neighbor 192.168.0.4 remote-as 65000
+interface eth0
+ip address 10.1.1.1/30
 
-  # Enable EVPN Address Family
-  address-family l2vpn evpn
-    neighbor 192.168.0.2 activate
-    neighbor 192.168.0.3 activate
-    neighbor 192.168.0.4 activate
+interface eth1
+ip address 10.1.1.5/30
 
-    # Route Reflector Configuration
-    neighbor 192.168.0.2 route-reflector-client
-    neighbor 192.168.0.3 route-reflector-client
-    neighbor 192.168.0.4 route-reflector-client
+interface eth2
+ip address 10.1.1.9/30
 
+interface lo
+ip address 1.1.1.1/32
+
+router bgp 1
+neighbor ibgp peer-group
+neighbor ibgp remote-as 1
+neighbor ibgp update-source lo
+bgp listen range 1.1.1.0/29 peer-group ibgp
+
+address-family l2vpn evpn
+neighbor ibgp activate
+neighbor ibgp route-reflector-client
+exit-address-family
+
+router ospf
+network 0.0.0.0/0 area 0
 exit
-write memory
 EOF

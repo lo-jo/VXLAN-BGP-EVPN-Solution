@@ -1,27 +1,34 @@
 #!/bin/bash
 
-sleep 2
+ip link add br0 type bridge
+ip link set dev br0 up
+ip link add vxlan10 type vxlan id 10 dstport 4789
+ip link set dev vxlan10 up
+brctl addif br0 vxlan10
+brctl addif br0 eth1
 
 vtysh <<-EOF
 configure terminal
+hostname mflores-2
 
-# VXLAN Configuration
-interface vxlan1000
-  vxlan local-tunnelip 192.168.0.2    # Leaf 1 VTEP IP
-  vxlan id 10001                      # VNI for this Leaf
-  vxlan source-interface eth0         # Physical interface connected to RR
+interface eth0
+ip address 10.1.1.2/30
+ip ospf area 0
 
-# BGP Configuration
-router bgp 65000
-  bgp router-id 192.168.0.2           # Unique Router ID for Leaf 1
-  neighbor 192.168.0.1 remote-as 65000  # Route Reflector IP and AS
-  update-source 192.168.0.2           # Source IP for BGP
+interface lo
+ip address 1.1.1.2/32
+ip ospf area 0
 
-  # Enable EVPN Address Family
-  address-family l2vpn evpn
-    neighbor 192.168.0.1 activate     # Activate EVPN
-    advertise-all-vni                 # Advertise VNIs dynamically
+router bgp 1
+neighbor 1.1.1.1 remote-as 1
+neighbor 1.1.1.1 update-source lo
+
+address-family l2vpn evpn
+neighbor 1.1.1.1 activate
+advertise-all-vni
+exit-address-family
+
+router ospf
 
 exit
-write memory
 EOF

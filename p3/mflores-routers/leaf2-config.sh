@@ -1,27 +1,27 @@
 #!/bin/bash
 
-sleep 2
-
 vtysh <<-EOF
 configure terminal
 
-# VXLAN Configuration
-interface vxlan1000
-  vxlan local-tunnelip 192.168.0.3    # Leaf 2 VTEP IP
-  vxlan id 10002                      # VNI for this Leaf
-  vxlan source-interface eth1         # Physical interface connected to RR
+hostname mflores-3
 
-# BGP Configuration
-router bgp 65000
-  bgp router-id 192.168.0.3           # Unique Router ID for Leaf 2
-  neighbor 192.168.0.1 remote-as 65000  # Route Reflector IP and AS
-  update-source 192.168.0.3           # Source IP for BGP
+interface eth1
+ip address 10.1.1.6/30
+ip ospf area 0
 
-  # Enable EVPN Address Family
-  address-family l2vpn evpn
-    neighbor 192.168.0.1 activate     # Activate EVPN
-    advertise-all-vni                 # Advertise VNIs dynamically
+interface lo
+ip address 1.1.1.3/32
+ip ospf area 0
+
+router bgp 1
+neighbor 1.1.1.1 remote-as 1
+neighbor 1.1.1.1 update-source lo
+
+address-family l2vpn evpn
+neighbor 1.1.1.1 activate
+exit-address-family
+
+router ospf
 
 exit
-write memory
 EOF
