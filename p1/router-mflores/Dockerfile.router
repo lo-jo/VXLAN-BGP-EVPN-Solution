@@ -4,5 +4,9 @@ RUN apk add --no-cache busybox
 WORKDIR /etc/frr/
 COPY --from=vagrant p1/router-mflores/daemons /etc/frr/daemons
 RUN mkdir /etc/init_scripts
-COPY --from=vagrant p2/mflores-routers/* /etc/init_scripts 
-RUN chmod +x /etc/init_scripts/*
+RUN mkdir /etc/init_scripts/p2
+COPY --from=vagrant p2/mflores-routers/* /etc/init_scripts/p2 
+RUN chmod +x /etc/init_scripts/p2/*
+RUN mkdir /etc/init_scripts/p3
+COPY --from=vagrant p3/mflores-routers/* /etc/init_scripts/p3
+RUN chmod +x /etc/init_scripts/p3/*

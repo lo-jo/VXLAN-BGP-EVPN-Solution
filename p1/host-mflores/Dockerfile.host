@@ -2,5 +2,9 @@ FROM alpine:latest
 
 RUN apk add --no-cache busybox
 RUN mkdir /etc/init_scripts
-COPY --from=vagrant p2/mflores-hosts/* /etc/init_scripts 
-RUN chmod +x /etc/init_scripts/*
+RUN mkdir /etc/init_scripts/p2
+COPY --from=vagrant p2/mflores-hosts/* /etc/init_scripts/p2
+RUN chmod +x /etc/init_scripts/p2/*
+RUN mkdir /etc/init_scripts/p3
+COPY --from=vagrant p3/mflores-hosts/* /etc/init_scripts/p3
+RUN chmod +x /etc/init_scripts/p3/*
