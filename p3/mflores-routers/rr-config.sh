@@ -29,5 +29,6 @@ exit-address-family
 
 router ospf
 network 0.0.0.0/0 area 0
+
 exit
 EOF
