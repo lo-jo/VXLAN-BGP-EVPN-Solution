@@ -7,6 +7,10 @@ ip link set dev vxlan10 up
 brctl addif br0 vxlan10
 brctl addif br0 eth1
 
+nohup /usr/lib/frr/docker-start &
+
+sleep 2
+
 vtysh <<EOF
 conf t
 hostname router-mflores-2
@@ -29,4 +33,4 @@ exit
 router ospf
 EOF
 
-/usr/lib/frr/docker-start
+/bin/sh

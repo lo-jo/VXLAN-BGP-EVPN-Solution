@@ -1,6 +1,8 @@
 #!/bin/sh
 
-/usr/lib/frr/docker-start
+nohup /usr/lib/frr/docker-start &
+
+sleep 2
 
 vtysh <<EOF
 conf t
@@ -32,3 +34,5 @@ router ospf
 exit
 line vty
 EOF
+
+/bin/sh
