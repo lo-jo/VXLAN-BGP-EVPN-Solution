@@ -3,7 +3,7 @@
 vtysh <<-EOF
 configure terminal
 
-hostname mflores-3
+hostname router_mflores-3
 
 interface eth1
 ip address 10.1.1.6/30

@@ -10,7 +10,7 @@ brctl addif br0 eth0
 vtysh <<-EOF
 configure terminal
 
-hostname mflores-4
+hostname router_mflores-4
 
 interface eth2
 ip address 10.1.1.10/30
