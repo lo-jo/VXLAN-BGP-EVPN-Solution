@@ -28,3 +28,5 @@ router bgp 1
 exit
 router ospf
 EOF
+
+/usr/lib/frr/docker-start

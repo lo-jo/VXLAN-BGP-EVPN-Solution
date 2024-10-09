@@ -1,5 +1,7 @@
 #!/bin/sh
 
+/usr/lib/frr/docker-start
+
 vtysh <<EOF
 conf t
 hostname router-mflores-1
