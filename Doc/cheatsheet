@@ -1,3 +1,4 @@
+
 ## What is an autonomous system ?
 
 The internet is a network made up of multiple smaller networks called autonomous systems.
@@ -18,7 +19,63 @@ They are used to create independent networks inside a physical network.
 
 A physical network is like a tower building where VLAN are floors and communication rules (switches) are elevators or doors that let or forbid the apartments communicate with each other.
 
+#Basic functioning of gns3
 
 
+#Global Operation and interest of BGP
+
+
+#Differences between layer 2 and layer 3
+
+
+#Packet routing Software
+
+
+#What is BGPD service requested in the subject
+
+
+#What is OSFPD service requested in the subject
+
+
+#What is Routing engine service service requested in the subject
+
+
+#What is Busybox service requested in the subject
+
+
+#What is VXLAN and differences with a VLAN
+
+
+#What is a switch
+
+
+#What is a bridge
+
+
+#Differences between broadcast and multicast
+
+
+#Expected operation of the topology in p2
+
+
+
+#What is BGP-EVPN
+
+
+#Principle of road reflection
+
+
+#What VTEP means as seen in the subject
+
+
+
+#What VNI means as seen in the subject
+
+
+
+#Difference between type2 and type3 roads
+
+
+#Expected operation of the topology in p3
 
 
