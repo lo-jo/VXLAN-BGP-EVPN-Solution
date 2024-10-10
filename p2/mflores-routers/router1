@@ -31,5 +31,6 @@ brctl addif br0 vxlan10
 ip link show eth1
 ip link show vxlan10
 
-exec /bin/sh
+/usr/lib/frr/docker-start
+#exec /bin/sh
 #/usr/lib/frr/docker-start
