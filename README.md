@@ -4,7 +4,7 @@ Simulation of VXLAN networks in GNS3 in a virtual machine.
 
 # Usage
 #### VIRTUAL MACHINE
-Launch the VN and ssh into it with X11 forwarding
+Launch the VM and ssh into it with X11 forwarding
 
 ``` 
 vagrant up
