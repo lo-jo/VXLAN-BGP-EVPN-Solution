@@ -1,5 +1,5 @@
 # BADASS
-
+.
 # Usage
 #### VIRTUAL MACHINE SET UP
 Install and ssh into the machine with X11 forwarding
