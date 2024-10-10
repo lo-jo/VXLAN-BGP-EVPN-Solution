@@ -1,48 +1,28 @@
-# BADASS
+# Bgp At Doors of Autonomous Systems is Simple
+
+Simulation of VXLAN networks in GNS3 in a virtual machine.
 
 # Usage
-#### VIRTUAL MACHINE SET UP
-Install and ssh into the machine with X11 forwarding
+#### VIRTUAL MACHINE
+Launch the VN and ssh into it with X11 forwarding
 
 ``` 
 vagrant up
 vagrant ssh -- -X
 ```
+### Network simulations
+For any of the network simulations, launching /vagrant/p1/build_devices beforehand is mandatory.
 
-Install GNS3 inside the machine via shared /vagrant folder
-``` 
-cd /vagrant 
-./installgns3.sh
-```
+# Part 1
+Configure GNS3 and Docker to create a Host and a Router from docker images.
 
+# Part 2
+VXLAN Network topology with 2 hosts, 2 routers and one switch.
 
-docker-compose up --build -d
+# Part 3
+BGP EVPN (Ethernet VPN) over VXLAN setup with:
+- one router acting as a RR (route reflector)
+- three routers for VXLAN (VTEPs-VXLAN tunnel endpoints)
+- three hosts connected to the routers 
 
-
-
-docker stop $(docker ps -a -q)
-docker rm $(docker ps -a -q)
-
-docker rmi $(docker images -a -q)
-
-
-## how to export gns3 project
-file > export portable project > include base images
-
-
-# THINGS LEFT TO DO
-p1 /
-automate building of the images with a script OK
-
-p2 /
-script for configuration in :
-HOSTS 
--1
--2
-ROUTERS 
--1
--2
-
-- save gns3 project
-- Write about static and dynamic multicast
 
