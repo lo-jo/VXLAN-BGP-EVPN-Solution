@@ -30,10 +30,127 @@ VxLAN, on the other hand, have a VNI coded under 24 bits which equals up to 16 m
 ![alt text](image.png)
 
 
-
-
 #### What is Static and Dynamic multicast ?
 
+#Basic functioning of gns3
 
-## What is OSPFD
-## What is IS IS 
+Gns 3 is an open source network simulation tool. It is used to elaborate/simulate more or less complex network typologies by emulating physical means such as routers/switches/hosts.
+
+Gns3 is composed of 
+
+- A GUI that permits us to design the topologies, configure the devices, link them etc...
+
+- A "back-end" component that manages the devices. This server can be located on our machine or on a remote server.
+
+Emulation of devices can be set up in several "cost-effective" ways (QEMU, virtualization or Docker containers as in this project). Devices like Cisco or other third parties hardware can also be emulated.
+
+The network topologies will be built/exported as projects that will carry through all the configuration that has been made. On the opening of such a project we can launch all the devices 
+and get control of them by using their internal consoles. Topologies's complexity is only limited by the ressources of our host machine.
+
+You can also use third parties utilities (as Wireshark) to capture packet traffic and troubleshoot your topologies.
+
+#Global Operation and interest of BGP
+
+
+
+#Differences between layer 2 and layer 3
+
+Layer 2 (Data Link Layer) and Layer 3 (Network Layer) are two layers of the OSI model and have different purposes.
+
+- Layer 2 :
+
+It manages local communication between devices that are physically connected on the same network segment and ensure reliable communication between directly connected devices.
+It also defines how data is formatted and provide mechanisms for devices on the same network to identify each other using MAC adresses. Mac adresses are hardware-based and unique to each
+network interface cards. 
+Typical devices concerned by layer 2 are the switches (forwarding data based on mac address within a network segment) and bridges (connect and filter traffic between two or more segments).
+Typical protocols used by layer 2 are Ethernet (data framing and Mac addressing over wired network), WIFI (almost same but wireless) and ARP (technically a layer 3 protocol but operates at 
+layer 2 to map IP adresses to MAC addresses).
+The data unit used at layer 2 is a frame. It includes a header (containing the MAC address), a payload (data) and an error-checking mechanism.
+Operations are limited to local network or broadcast domain (a frame can be sent to all devices on the same local network). Data at layer 2 cannot traverse routers.
+
+- Layer 3 :
+
+It manages end-to-end communication across different networks enabling data to travel to travel between devices located on different network segments.
+It handles logical adressing (by the mean of IP adress) and routing (determining the best path from source to destination through different routers). It also ensures that packets are delivered
+to the correct destination.
+Typical devices concerned by layer 3 are the routers (forwarding data between different routers based on IP adress and determining the best path between networks) and some layer 3 switches.
+Typical protocols used by layer 3 are IP (logical adressing), ICMP (diagnostic purposes like ping) and routing protocols (OSPF, BGP that determines the best routes for traffic)
+The data unit used at layer 3 is a packet. It contains a header(source and destination IP address), a payload (data) and control information for routing and framgentation. In case of fragmentation 
+of the data, the receiving device is responsible for re-assembly of the data.
+Operations at layer 3 can occur through different network and across the Internet. Broadcasting between different network is limited but multicast can be used at layer 3 (send data to groups of devices).
+
+#Packet routing Software
+
+We used zebra that is an open source software. Zebra permit us to manage network protocol routing tables (data structure used by routers to store path to different destination) and handles multiple protocols.
+We can adjust it to our need easily through configuration file, as zebra uses separate protocol specific daemons. It also allows different protocols to interact and share informations about network routes.
+
+#What is BGPD service requested in the subject
+
+It is the BGP daemon that is used by our packet routing software to implement the Border Gateway Protocol within our networks. It usually runs on routers or servers and enables them to exchange 
+network reachability informations.
+
+#What is OSFPD service requested in the subject
+
+It is the OSPF daemon. OSPF is an interior gateway protocol used for routing within a sing AS. It builds a complete map of the network topology and uses Djiksta algorithm to find the shorest path to each destination.
+OSPF maintains and updates the routing table according to topology changes. 
+Devices can be "grouped" inside areas to reduce the complexity of larhe routing tables. Devices of a same area exchanges summarized routing informations to reduce the amount of detailed informations that needs to 
+be stored and processed.
+
+#What is Routing engine service service requested in the subject
+
+It is IS-IS (Intermediate System to Intermediate System). As OSPF it is also a link-state IGP protocol that uses Djikstra's algorithm to determine the best route for traffic. 
+As opposed to OSPF (that operates at layer 3), IS-IS operates on top of layer 2.
+
+#What is Busybox service requested in the subject
+
+Busybox is a service that include many system tools (ls, ps, grep for example) packaged in a single executable file. Busybox is often used in embedded systems or devices such as routers
+because of it's lightweight size compared to the GNU coreutils package.
+
+#What is VXLAN and differences with a VLAN
+
+
+#What is a switch
+
+A switch is a hardware device that connectis multiple devices within a network and allows them to communicate by forwarding data. It operates mainly at layer 2 of the OSI model.
+It receives data and forward to other devices based on their MAC addresses (it builds a table of MAC addresses of each device that is connected to one of it's port).
+
+#What is a bridge
+
+Bridge is almost the same as a switch but is an older techonology device. It can connect fewer network segements and have less ports thant most of modern switches.
+They can still be used in small network configurations.
+
+
+#Differences between broadcast and multicast
+
+They are two different methods of sending data over a network. They both handles sending data to multiple devices but in different ways.
+
+With broadcast, the data is sent to all the devices over a network by using the broadcast address. It operates at layer 2 essentially. 
+It is used for tasks like ARP. It is typically limited to a local network as routers usually block broadcasts from propagating.
+
+With multicast, data is sent to all the devices that belong to a specific group. It is more efficient as only the concerned devices will receive the data.
+It operates mostly at layer 3. Multicast can be routed across different networks and so groups can span multiple segments. 
+
+#Expected operation of the topology in p2
+
+
+
+
+#What is BGP-EVPN
+
+
+#Principle of road reflection
+
+
+#What VTEP means as seen in the subject
+
+
+
+#What VNI means as seen in the subject
+
+
+
+#Difference between type2 and type3 roads
+
+
+#Expected operation of the topology in p3
+
