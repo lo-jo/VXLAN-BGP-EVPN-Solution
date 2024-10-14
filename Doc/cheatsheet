@@ -91,9 +91,9 @@ network reachability informations.
 
 #What is OSFPD service requested in the subject
 
-It is the OSPF daemon. OSPF is an interior gateway protocol used for routing within a sing AS. It builds a complete map of the network topology and uses Djiksta algorithm to find the shorest path to each destination.
+It is the OSPF daemon. OSPF is an interior gateway protocol used for routing within a single AS. It builds a complete map of the network topology and uses Djiksta algorithm to find the shorest path to each destination.
 OSPF maintains and updates the routing table according to topology changes. 
-Devices can be "grouped" inside areas to reduce the complexity of larhe routing tables. Devices of a same area exchanges summarized routing informations to reduce the amount of detailed informations that needs to 
+Devices can be "grouped" inside areas to reduce the complexity of large routing tables. Devices of a same area exchanges summarized routing informations to reduce the amount of detailed informations that needs to 
 be stored and processed.
 
 #What is Routing engine service service requested in the subject
@@ -151,24 +151,77 @@ The traffic should then occurs as so (in the case of host 1 trying to reach host
 Host 1 will prepare an Ethernet frame containing IP and MAC address of host 2 (mac obtained via ARP request if unknown at that stage).
 Router 1 will encapsulate this into a VXLAN packet and transmit it to the other VTEP that is router 2.
 
+At this stage the VXLAN packet will look like this :
+- Outer source IP (own router IP)
+- Outer destination IP (multicast group adress or router 2 IP in case of unicast)
+- VXLAN header : it contains the VNI. The original ethernet frame is in the VXLAN payload.
 
+Router 2 receives the packet and decapsulate it. It will see that the MAC destination corresponds to Host2 and forward the Ethernet frame to Host2.
+
+Communication is complete.
 
 #What is BGP-EVPN
 
 
+
 #Principle of road reflection
 
+Road reflection, and especially in the scope of this project, is the fact that we will use a router/controller to propagate the BGP EVPN routes 
+to other internalBGP peers. Without using this principle we should have interconnected each router between them in a full-mesh style.
+The route reflection permit to have dynamic relations between the leaf routers. It's easily scalable and cost effective as less BGP sessions are
+established.
+When a leaf router turns on it will establish a BGP session with the route reflector and advertise it with a route of type 3. When the route reflector 
+receive this route, it will reflect it to other leaves.
+Same happen when an host advertise it"s router with it's MAC address, the router advertise the route reflector with this new route of type 2 and the RR 
+reflects this new route to other leaves. In the end all leaves/VTEP's are aware of each hosts and VTEPs that are associated to them.
 
 #What VTEP means as seen in the subject
 
-
+VXLAN tunnel endpoints are used in this project to establish communication between hosts as if they were on a same physical network.
+To do so, a VXLAN tunnel is established between 2 or more VTEP's (depending of unicast or multicast). Each VTEP, that might be linked by a layer 3 network
+will encapsulate data transmitted by hosts and handle the layer 3 communication, leaving hosts only responsible for layer 2 informations. By doing so, 
+it can establish a Layer 2 outlay network over a layer 3 network.
+The VTEP will address the encapsuled data to the other VTEP that will decapsulate the data and forward it to the concerned host.
+In the scope of p3, VTEPS are the leaf routers.
 
 #What VNI means as seen in the subject
 
+VXLAN Network Identifier defines the VXLAN segment in which VTEPs belong. The VNI iis used to ensure that only devices which belongs to it can 
+communicate with each other. Devices in different VNIs can't communicate and are logically isolated even if they are on a same physical layer 3 network.
+The VNI is included in the header crafted at VXLAN encapsulation by VTEPs.
 
 
 #Difference between type2 and type3 roads
 
 
+
+
+
 #Expected operation of the topology in p3
 
+We must set up a topology with a spline-leaf architecture composed of :
+
+- A spine router that acts as controller/Route Reflector for BGP/EVPN use
+- 3 leaf-routers that will act as VTEP in a VXLAN tunnel
+- 3 hosts that are respectively connected to each routers
+
+Our VTEP's must have dynamic relations in the sense that they must learn from each other by the mean of the Route Reflector, and update accordingly.
+
+As we are not using full-mesh (each VTEP is connected to the others) we will configure our spine router to accept BGP routes from the leaf and then 
+reflecting the routes to all other leaves, giving to all of them MAC adress informations and Layer 2 reachability (in the case of a type 2 route).
+
+Each leaf router will establish an Ospf connection with the Route Reflector ensuring IP reachability and communication over Layer 3.
+When the Ospf conenction is done, it will establish a BGP peering session with the RR.
+The RR will then advertise all other leaf routers about the new VXLAN endpoint  creating a type 3 route.
+
+When an host turns on it will advertise it's MAC address to the leaf router it"s connected to (and optionnaly it\'s IP address).
+On reception of such data, the concerned leaf router will establish a route of type 2 and advertise the Route Reflector of this road.
+On reception of this type 2 route, Route reflector reflects/advertise the other leaves with this route. Permitting all leaf routers to know about
+each host and it's associated VTEP.
+
+So when an host1 tries to send data to another host3 :
+
+- It will transmit the frame to it's leaf router.
+- The leaf router will look up for the route concerning host3 (route that has been learned through route reflection by the spine router).
+- Knowing the VTEP associated with host 3, it will ensure classic VXLAN transmission (encapsulation and transmission to other VTEP).
+- The VTEP associated to host3 will decapsulate the information and forward it to host 3
