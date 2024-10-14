@@ -19,63 +19,197 @@ They are used to create independent networks inside a physical network.
 
 A physical network is like a tower building where VLAN are floors and communication rules (switches) are elevators or doors that let or forbid the apartments communicate with each other.
 
+
 #Basic functioning of gns3
 
+Gns 3 is an open source network simulation tool. It is used to elaborate/simulate more or less complex network typologies by emulating physical means such as routers/switches/hosts.
+
+Gns3 is composed of 
+
+- A GUI that permits us to design the topologies, configure the devices, link them etc...
+
+- A "back-end" component that manages the devices. This server can be located on our machine or on a remote server.
+
+Emulation of devices can be set up in several "cost-effective" ways (QEMU, virtualization or Docker containers as in this project). Devices like Cisco or other third parties hardware can also be emulated.
+
+The network topologies will be built/exported as projects that will carry through all the configuration that has been made. On the opening of such a project we can launch all the devices 
+and get control of them by using their internal consoles. Topologies's complexity is only limited by the ressources of our host machine.
+
+You can also use third parties utilities (as Wireshark) to capture packet traffic and troubleshoot your topologies.
 
 #Global Operation and interest of BGP
 
 
+
 #Differences between layer 2 and layer 3
 
+Layer 2 (Data Link Layer) and Layer 3 (Network Layer) are two layers of the OSI model and have different purposes.
+
+- Layer 2 :
+
+It manages local communication between devices that are physically connected on the same network segment and ensure reliable communication between directly connected devices.
+It also defines how data is formatted and provide mechanisms for devices on the same network to identify each other using MAC adresses. Mac adresses are hardware-based and unique to each
+network interface cards. 
+Typical devices concerned by layer 2 are the switches (forwarding data based on mac address within a network segment) and bridges (connect and filter traffic between two or more segments).
+Typical protocols used by layer 2 are Ethernet (data framing and Mac addressing over wired network), WIFI (almost same but wireless) and ARP (technically a layer 3 protocol but operates at 
+layer 2 to map IP adresses to MAC addresses).
+The data unit used at layer 2 is a frame. It includes a header (containing the MAC address), a payload (data) and an error-checking mechanism.
+Operations are limited to local network or broadcast domain (a frame can be sent to all devices on the same local network). Data at layer 2 cannot traverse routers.
+
+- Layer 3 :
+
+It manages end-to-end communication across different networks enabling data to travel to travel between devices located on different network segments.
+It handles logical adressing (by the mean of IP adress) and routing (determining the best path from source to destination through different routers). It also ensures that packets are delivered
+to the correct destination.
+Typical devices concerned by layer 3 are the routers (forwarding data between different routers based on IP adress and determining the best path between networks) and some layer 3 switches.
+Typical protocols used by layer 3 are IP (logical adressing), ICMP (diagnostic purposes like ping) and routing protocols (OSPF, BGP that determines the best routes for traffic)
+The data unit used at layer 3 is a packet. It contains a header(source and destination IP address), a payload (data) and control information for routing and framgentation. In case of fragmentation 
+of the data, the receiving device is responsible for re-assembly of the data.
+Operations at layer 3 can occur through different network and across the Internet. Broadcasting between different network is limited but multicast can be used at layer 3 (send data to groups of devices).
 
 #Packet routing Software
 
+We used zebra that is an open source software. Zebra permit us to manage network protocol routing tables (data structure used by routers to store path to different destination) and handles multiple protocols.
+We can adjust it to our need easily through configuration file, as zebra uses separate protocol specific daemons. It also allows different protocols to interact and share informations about network routes.
 
 #What is BGPD service requested in the subject
 
+It is the BGP daemon that is used by our packet routing software to implement the Border Gateway Protocol within our networks. It usually runs on routers or servers and enables them to exchange 
+network reachability informations.
 
 #What is OSFPD service requested in the subject
 
+It is the OSPF daemon. OSPF is an interior gateway protocol used for routing within a single AS. It builds a complete map of the network topology and uses Djiksta algorithm to find the shorest path to each destination.
+OSPF maintains and updates the routing table according to topology changes. 
+Devices can be "grouped" inside areas to reduce the complexity of large routing tables. Devices of a same area exchanges summarized routing informations to reduce the amount of detailed informations that needs to 
+be stored and processed.
 
 #What is Routing engine service service requested in the subject
 
+It is IS-IS (Intermediate System to Intermediate System). As OSPF it is also a link-state IGP protocol that uses Djikstra's algorithm to determine the best route for traffic. 
+As opposed to OSPF (that operates at layer 3), IS-IS operates on top of layer 2.
 
 #What is Busybox service requested in the subject
 
+Busybox is a service that include many system tools (ls, ps, grep for example) packaged in a single executable file. Busybox is often used in embedded systems or devices such as routers
+because of it's lightweight size compared to the GNU coreutils package.
 
 #What is VXLAN and differences with a VLAN
 
 
 #What is a switch
 
+A switch is a hardware device that connectis multiple devices within a network and allows them to communicate by forwarding data. It operates mainly at layer 2 of the OSI model.
+It receives data and forward to other devices based on their MAC addresses (it builds a table of MAC addresses of each device that is connected to one of it's port).
 
 #What is a bridge
+
+Bridge is almost the same as a switch but is an older techonology device. It can connect fewer network segements and have less ports thant most of modern switches.
+They can still be used in small network configurations.
+We might also consider software bridges upon a device such as a router. The software bridge will permit us to link multiple interfaces ( physical and software as VXLAN interaces)
+upon the same device.
 
 
 #Differences between broadcast and multicast
 
+They are two different methods of sending data over a network. They both handles sending data to multiple devices but in different ways.
+
+With broadcast, the data is sent to all the devices over a network by using the broadcast address. It operates at layer 2 essentially. 
+It is used for tasks like ARP. It is typically limited to a local network as routers usually block broadcasts from propagating.
+
+With multicast, data is sent to all the devices that belong to a specific group. It is more efficient as only the concerned devices will receive the data.
+It operates mostly at layer 3. Multicast can be routed across different networks and so groups can span multiple segments. 
 
 #Expected operation of the topology in p2
 
+We have two routers that are connected by a switch that acts as a layer 2 device, permitting  the two routers to communicate based on their mac adress.
+We also have two hosts that are respectively connected to each router.
+We must setup a VXLAN tunnel between our two routers to enable communication between the two hosts as if they were on the same local network without using IP routing at layer 3.
+The purpose of this VXLAN tunnel is to create an overlay network (layer 2) on top of a layer 3 network.
+On each router we will add a Vxlan interface that will be on the same VNI and we will use two forwarding methods.
 
+First we will use static unicast forwarding. The tunnel will be created between the two routers. On each router we will explicitely define
+the other remote router/endpoint (VTEP) address. In this mode, the traffic will be encapsulated by the router and sent only to the other endpoint (point to point communication).
+
+The second mode we will use is multicast forwarding. In this mode we define a multicast group and add routers to this group by giving them a multicast group adress.
+This way, traffic (as broadcast frames or ARP requests) is dispatched to all the routers that have joined the same multicast group.
+
+The traffic should then occurs as so (in the case of host 1 trying to reach host 2) :
+
+Host 1 will prepare an Ethernet frame containing IP and MAC address of host 2 (mac obtained via ARP request if unknown at that stage).
+Router 1 will encapsulate this into a VXLAN packet and transmit it to the other VTEP that is router 2.
+
+At this stage the VXLAN packet will look like this :
+- Outer source IP (own router IP)
+- Outer destination IP (multicast group adress or router 2 IP in case of unicast)
+- VXLAN header : it contains the VNI. The original ethernet frame is in the VXLAN payload.
+
+Router 2 receives the packet and decapsulate it. It will see that the MAC destination corresponds to Host2 and forward the Ethernet frame to Host2.
+
+Communication is complete.
 
 #What is BGP-EVPN
 
 
+
 #Principle of road reflection
 
+Road reflection, and especially in the scope of this project, is the fact that we will use a router/controller to propagate the BGP EVPN routes 
+to other internalBGP peers. Without using this principle we should have interconnected each router between them in a full-mesh style.
+The route reflection permit to have dynamic relations between the leaf routers. It's easily scalable and cost effective as less BGP sessions are
+established.
+When a leaf router turns on it will establish a BGP session with the route reflector and advertise it with a route of type 3. When the route reflector 
+receive this route, it will reflect it to other leaves.
+Same happen when an host advertise it"s router with it's MAC address, the router advertise the route reflector with this new route of type 2 and the RR 
+reflects this new route to other leaves. In the end all leaves/VTEP's are aware of each hosts and VTEPs that are associated to them.
 
 #What VTEP means as seen in the subject
 
-
+VXLAN tunnel endpoints are used in this project to establish communication between hosts as if they were on a same physical network.
+To do so, a VXLAN tunnel is established between 2 or more VTEP's (depending of unicast or multicast). Each VTEP, that might be linked by a layer 3 network
+will encapsulate data transmitted by hosts and handle the layer 3 communication, leaving hosts only responsible for layer 2 informations. By doing so, 
+it can establish a Layer 2 outlay network over a layer 3 network.
+The VTEP will address the encapsuled data to the other VTEP that will decapsulate the data and forward it to the concerned host.
+In the scope of p3, VTEPS are the leaf routers.
 
 #What VNI means as seen in the subject
 
+VXLAN Network Identifier defines the VXLAN segment in which VTEPs belong. The VNI iis used to ensure that only devices which belongs to it can 
+communicate with each other. Devices in different VNIs can't communicate and are logically isolated even if they are on a same physical layer 3 network.
+The VNI is included in the header crafted at VXLAN encapsulation by VTEPs.
 
 
 #Difference between type2 and type3 roads
 
 
+
+
+
 #Expected operation of the topology in p3
 
+We must set up a topology with a spline-leaf architecture composed of :
 
+- A spine router that acts as controller/Route Reflector for BGP/EVPN use
+- 3 leaf-routers that will act as VTEP in a VXLAN tunnel
+- 3 hosts that are respectively connected to each routers
+
+Our VTEP's must have dynamic relations in the sense that they must learn from each other by the mean of the Route Reflector, and update accordingly.
+
+As we are not using full-mesh (each VTEP is connected to the others) we will configure our spine router to accept BGP routes from the leaf and then 
+reflecting the routes to all other leaves, giving to all of them MAC adress informations and Layer 2 reachability (in the case of a type 2 route).
+
+Each leaf router will establish an Ospf connection with the Route Reflector ensuring IP reachability and communication over Layer 3.
+When the Ospf conenction is done, it will establish a BGP peering session with the RR.
+The RR will then advertise all other leaf routers about the new VXLAN endpoint  creating a type 3 route.
+
+When an host turns on it will advertise it's MAC address to the leaf router it"s connected to (and optionnaly it\'s IP address).
+On reception of such data, the concerned leaf router will establish a route of type 2 and advertise the Route Reflector of this road.
+On reception of this type 2 route, Route reflector reflects/advertise the other leaves with this route. Permitting all leaf routers to know about
+each host and it's associated VTEP.
+
+So when an host1 tries to send data to another host3 :
+
+- It will transmit the frame to it's leaf router.
+- The leaf router will look up for the route concerning host3 (route that has been learned through route reflection by the spine router).
+- Knowing the VTEP associated with host 3, it will ensure classic VXLAN transmission (encapsulation and transmission to other VTEP).
+- The VTEP associated to host3 will decapsulate the information and forward it to host 3
