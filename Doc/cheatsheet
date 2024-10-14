@@ -118,6 +118,8 @@ It receives data and forward to other devices based on their MAC addresses (it b
 
 Bridge is almost the same as a switch but is an older techonology device. It can connect fewer network segements and have less ports thant most of modern switches.
 They can still be used in small network configurations.
+We might also consider software bridges upon a device such as a router. The software bridge will permit us to link multiple interfaces ( physical and software as VXLAN interaces)
+upon the same device.
 
 
 #Differences between broadcast and multicast
@@ -132,6 +134,22 @@ It operates mostly at layer 3. Multicast can be routed across different networks
 
 #Expected operation of the topology in p2
 
+We have two routers that are connected by a switch that acts as a layer 2 device, permitting  the two routers to communicate based on their mac adress.
+We also have two hosts that are respectively connected to each router.
+We must setup a VXLAN tunnel between our two routers to enable communication between the two hosts as if they were on the same local network without using IP routing at layer 3.
+The purpose of this VXLAN tunnel is to create an overlay network (layer 2) on top of a layer 3 network.
+On each router we will add a Vxlan interface that will be on the same VNI and we will use two forwarding methods.
+
+First we will use static unicast forwarding. The tunnel will be created between the two routers. On each router we will explicitely define
+the other remote router/endpoint (VTEP) address. In this mode, the traffic will be encapsulated by the router and sent only to the other endpoint (point to point communication).
+
+The second mode we will use is multicast forwarding. In this mode we define a multicast group and add routers to this group by giving them a multicast group adress.
+This way, traffic (as broadcast frames or ARP requests) is dispatched to all the routers that have joined the same multicast group.
+
+The traffic should then occurs as so (in the case of host 1 trying to reach host 2) :
+
+Host 1 will prepare an Ethernet frame containing IP and MAC address of host 2 (mac obtained via ARP request if unknown at that stage).
+Router 1 will encapsulate this into a VXLAN packet and transmit it to the other VTEP that is router 2.
 
 
 
