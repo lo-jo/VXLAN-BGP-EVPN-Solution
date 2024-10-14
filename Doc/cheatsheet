@@ -39,6 +39,18 @@ You can also use third parties utilities (as Wireshark) to capture packet traffi
 
 #Global Operation and interest of BGP
 
+Border Gateway Protocol is the primary protocol used to exchange routing informations between Autonomous Systems on the Internet.
+There are two types of BGP :
+- External BGP -> used for routing between Autonomous Systems.
+- Internal BGP -> used for routing within an AS.
+
+BGP routers exchange routing informations with each others using BGP sessions. They must estabish a TCP connection before being able to advertise 
+routes to others BGP peers.
+BGP then uses several criterias to select the best route (next hop, local preference or weight) when multiple path exists. If a routers select a best route,
+it might advertise it to other peers.
+
+
+
 
 
 #Differences between layer 2 and layer 3
@@ -91,10 +103,11 @@ As opposed to OSPF (that operates at layer 3), IS-IS operates on top of layer 2.
 
 #What is Busybox service requested in the subject
 
-Busybox is a service that include many system tools (ls, ps, grep for example) packaged in a single executable file. Busybox is often used in embedded systems or devices such as routers
+Busybox is a service that includes many system tools (ls, ps, grep for example) packaged in a single executable file. Busybox is often used in embedded systems or devices such as routers
 because of it's lightweight size compared to the GNU coreutils package.
 
 #What is VXLAN and differences with a VLAN
+
 
 
 #What is a switch
@@ -181,8 +194,19 @@ The VNI is included in the header crafted at VXLAN encapsulation by VTEPs.
 
 #Difference between type2 and type3 roads
 
+Type 2 and type 3 routes occurs in the BGP/EVPN protocol. 
 
+Type 2 routes are usually used to advertise MAC (and optionnaly IP) addresses of hosts that are connected to a leaf router. 
+A type 2 routes contains :
+ -MAC address of the host
+ -IP address of the host (optionnal)
+ -VTEP IP address (here the leaf router)
+ These roads (that will be advertised by leaf routers when an host gives them their address) will be reflected to other leves/Vteps so that 
+ each one is aware of each hosts and VTEPs informations.
 
+ Type 3 routes are used to advertise multicast and broadcast reachability for VXLAN.
+ They contain the VNI for which the route is advertised and the IP address of the VTEP which advertise the route.
+ These roads will be advertised by leaf routers to the RR, and the RR will rflects them to other leaf routers.
 
 
 #Expected operation of the topology in p3
@@ -193,7 +217,7 @@ We must set up a topology with a spline-leaf architecture composed of :
 - 3 leaf-routers that will act as VTEP in a VXLAN tunnel
 - 3 hosts that are respectively connected to each routers
 
-Our VTEP's must have dynamic relations in the sense that they must learn from each other by the mean of the Route Reflector, and update accordingly.
+Our VTEPs must have dynamic relations in the sense that they must learn from each other by the mean of the Route Reflector, and update accordingly.
 
 As we are not using full-mesh (each VTEP is connected to the others) we will configure our spine router to accept BGP routes from the leaf and then 
 reflecting the routes to all other leaves, giving to all of them MAC adress informations and Layer 2 reachability (in the case of a type 2 route).
