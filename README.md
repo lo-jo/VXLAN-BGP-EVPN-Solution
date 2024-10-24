@@ -1,6 +1,6 @@
 # Bgp At Doors of Autonomous Systems is Simple
 
-Simulation of VXLAN networks in GNS3 in a virtual machine.
+Simulation of virtual network solutions with GNS3 inside a virtual machine.
 
 # Usage
 #### VIRTUAL MACHINE
