@@ -32,6 +32,6 @@ BGP EVPN (Ethernet VPN) over VXLAN setup with:
 - three routers for VXLAN (VTEPs-VXLAN tunnel endpoints)
 - three hosts connected to the routers 
 
-[DOCUMENTATION](Doc/p2.md)
+[DOCUMENTATION](Doc/p3.md)
 
 
