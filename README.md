@@ -25,7 +25,7 @@ VXLAN Network topology with 2 hosts, 2 routers and one switch.\
 [DOCUMENTATION](Doc/p2.md)
 
 # Part 3
-[<img src="Doc/topology_p2.png" width="500"/>](Topology3)
+[<img src="Doc/topology_p3.png" width="500"/>](Topology3)
 
 BGP EVPN (Ethernet VPN) over VXLAN setup with:
 - one router acting as a RR (route reflector)
